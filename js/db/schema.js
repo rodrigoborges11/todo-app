@@ -66,8 +66,8 @@ async function seedIfEmpty() {
     },
     {
       id: uid(), areaId: bestArea.id, listId: bestList.id, parentId: null, sourceEventId: null,
-      title: 'Liga a tua conta Google do BEST nas Definições',
-      description: 'Assim vês as reuniões do BEST ao lado das tuas tarefas na vista Hoje.',
+      title: 'Importa o calendário do BEST nas Definições',
+      description: 'Exporta um .ics do Apple Calendar e importa nas Definições para ver as reuniões ao lado das tarefas.',
       dueAt: null, priority: 'medium', isCompleted: false, completedAt: null,
       position: 0, createdAt: now, updatedAt: now, isExample: true,
     },

@@ -2,8 +2,6 @@ import { render, html } from './lib/preact.js';
 import { dbReady } from './db/schema.js';
 import { getSettings, requestPersistentStorage, checkStorageAvailable } from './api/settings.js';
 import { uiStore, applyTheme } from './state/store.js';
-import { syncAllAccounts } from './google/calendarClient.js';
-import { googleIntegrationEnabled } from './google/config.js';
 import { AppShell } from './components/shell/AppShell.js';
 
 const root = document.getElementById('app');
@@ -52,15 +50,6 @@ async function boot() {
   requestPersistentStorage();
 
   render(html`<${AppShell} />`, root);
-
-  // Sincronização silenciosa de calendário ao abrir e a cada 15 min (RF-90),
-  // só ocorre com a app aberta (ver secção 2.1 do documento de requisitos).
-  if (googleIntegrationEnabled()) {
-    syncAllAccounts(settings).catch(() => {});
-    setInterval(() => {
-      getSettings().then((s) => syncAllAccounts(s).catch(() => {}));
-    }, 15 * 60 * 1000);
-  }
 }
 
 boot();

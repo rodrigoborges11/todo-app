@@ -4,7 +4,6 @@ import { getUpcomingTasks } from '../../api/tasks.js';
 import { getAreas } from '../../api/areas.js';
 import { getAllTags } from '../../api/tags.js';
 import { getCachedEvents } from '../../google/calendarClient.js';
-import { googleIntegrationEnabled } from '../../google/config.js';
 import { addDays, startOfDay, formatDayLabel } from '../../lib/date.js';
 import { QuickCapture } from '../capture/QuickCapture.js';
 import { TaskItem } from '../tasks/TaskItem.js';
@@ -21,7 +20,7 @@ export function UpcomingView({ areaFilter }) {
   const from = addDays(startOfDay(Date.now()), 1);
   const to = addDays(from, DAYS_AHEAD) - 1;
   const [events] = useLiveQuery(
-    () => (googleIntegrationEnabled() ? getCachedEvents({ fromTs: from, toTs: to, areaId: areaFilter }) : Promise.resolve([])),
+    () => getCachedEvents({ fromTs: from, toTs: to, areaId: areaFilter }),
     [areaFilter],
     [],
   );

@@ -3,7 +3,6 @@ import { useLiveQuery } from '../../state/useLiveQuery.js';
 import { getTodayTasks, removeExampleTasks } from '../../api/tasks.js';
 import { getAreas } from '../../api/areas.js';
 import { getCachedEvents } from '../../google/calendarClient.js';
-import { googleIntegrationEnabled } from '../../google/config.js';
 import { startOfDay, endOfDay, formatFullDate } from '../../lib/date.js';
 import { QuickCapture } from '../capture/QuickCapture.js';
 import { TaskListSection } from '../tasks/TaskListSection.js';
@@ -15,7 +14,7 @@ export function TodayView({ areaFilter }) {
   const [tasks] = useLiveQuery(() => getTodayTasks(areaFilter), [areaFilter], null);
   const [areas] = useLiveQuery(() => getAreas(), [], []);
   const [events] = useLiveQuery(
-    () => (googleIntegrationEnabled() ? getCachedEvents({ fromTs: startOfDay(), toTs: endOfDay(), areaId: areaFilter }) : Promise.resolve([])),
+    () => getCachedEvents({ fromTs: startOfDay(), toTs: endOfDay(), areaId: areaFilter }),
     [areaFilter],
     [],
   );

@@ -6,7 +6,7 @@ import {
 import { exportToFile, exportToCsv, validateImportPayload, importPayload } from '../../api/exportImport.js';
 import { getAllTags, renameTag, deleteTag, tagUsageCount } from '../../api/tags.js';
 import { getAreas } from '../../api/areas.js';
-import { ConnectedAccounts } from '../calendar/ConnectedAccounts.js';
+import { AppleCalendarAccounts } from '../calendar/AppleCalendarAccounts.js';
 import { ConfirmDialog } from '../common/ConfirmDialog.js';
 import { Icon } from '../common/icons.js';
 import { showToast } from '../../state/store.js';
@@ -195,8 +195,8 @@ export function SettingsView() {
     <div class="max-w-2xl mx-auto flex flex-col gap-4 view-enter pb-10">
       <h1 class="text-xl font-semibold mb-1">Definições</h1>
 
-      <${SectionCard} title="Google Calendar" description="Apenas leitura — a app nunca escreve no teu calendário (secção 2.2 do documento de requisitos).">
-        <${ConnectedAccounts} />
+      <${SectionCard} title="Apple Calendar" description="Importa um ficheiro .ics exportado do Calendário para veres os teus eventos ao lado das tarefas.">
+        <${AppleCalendarAccounts} />
       <//>
 
       <${StorageSection} />
