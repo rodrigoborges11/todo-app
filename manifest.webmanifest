@@ -1,0 +1,16 @@
+{
+  "name": "Ledger — Tarefas Pessoal & BEST",
+  "short_name": "Ledger",
+  "description": "To-do list local-first com calendário Google em leitura, separando tarefas Pessoais das do BEST.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#10131A",
+  "theme_color": "#10131A",
+  "orientation": "portrait-primary",
+  "icons": [
+    { "src": "./icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "./icons/icon-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

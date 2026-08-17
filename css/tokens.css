@@ -1,0 +1,73 @@
+/*
+  Sistema de tokens — "Ledger" (duas cadernetas, um caderno)
+  Sinal distintivo: cada área (Pessoal / BEST) é uma "aba de caderneta" colorida.
+  As tarefas e listas carregam uma fita fina na margem esquerda com a cor da sua área,
+  como se fossem folhas arquivadas atrás da aba correspondente.
+*/
+
+:root, [data-theme="dark"] {
+  color-scheme: dark;
+  --surface-0: #10131A;
+  --surface-1: #171B24;
+  --surface-2: #1F2430;
+  --surface-3: #262C3A;
+  --border: #2B3140;
+  --border-strong: #3A4256;
+  --text-primary: #E7EAF2;
+  --text-muted: #8B92A6;
+  --text-faint: #5B6478;
+
+  --area-pessoal: #2FB6A0;
+  --area-pessoal-soft: rgba(47, 182, 160, 0.14);
+  --area-best: #4C7DFF;
+  --area-best-amber: #F2A93C;
+  --area-best-soft: rgba(76, 125, 255, 0.16);
+
+  --priority-high: #E5484D;
+  --priority-medium: #F2A93C;
+  --priority-low: #6B7A99;
+
+  --danger: #E5484D;
+  --danger-soft: rgba(229, 72, 77, 0.14);
+  --success: #2FB6A0;
+
+  --shadow-panel: 0 12px 32px -12px rgba(0, 0, 0, 0.55);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --surface-0: #EFF1F5;
+  --surface-1: #FFFFFF;
+  --surface-2: #E7E9EF;
+  --surface-3: #DBDFE7;
+  --border: #D6D9E2;
+  --border-strong: #C2C6D3;
+  --text-primary: #171A23;
+  --text-muted: #5B6478;
+  --text-faint: #8B92A6;
+
+  --area-pessoal: #1C9385;
+  --area-pessoal-soft: rgba(28, 147, 133, 0.12);
+  --area-best: #2F55E0;
+  --area-best-amber: #C9800F;
+  --area-best-soft: rgba(47, 85, 224, 0.10);
+
+  --priority-high: #D63A3F;
+  --priority-medium: #C9800F;
+  --priority-low: #6B7A99;
+
+  --danger: #D63A3F;
+  --danger-soft: rgba(214, 58, 63, 0.10);
+  --success: #1C9385;
+
+  --shadow-panel: 0 12px 32px -16px rgba(23, 26, 35, 0.25);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

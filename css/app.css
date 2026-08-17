@@ -1,0 +1,77 @@
+html, body, #app { height: 100%; }
+body { min-height: 100dvh; }
+
+* { border-color: var(--border); }
+
+::selection { background: var(--area-best-soft); }
+
+/* Foco visível consistente em toda a app */
+:focus-visible {
+  outline: 2px solid var(--area-best);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Scrollbar discreta */
+::-webkit-scrollbar { width: 10px; height: 10px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: 999px; border: 2px solid transparent; background-clip: padding-box; }
+
+/* ---------- Elemento-assinatura: aba de caderneta ---------- */
+/* Usado no seletor de áreas da barra lateral: cada área é uma aba física
+   que sobressai, como as separadoras de um dossiê de argolas. */
+.ledger-tab {
+  position: relative;
+  clip-path: polygon(0 0, 100% 0, 92% 100%, 8% 100%);
+}
+.ledger-tab::after {
+  content: '';
+  position: absolute;
+  left: 0; right: 0; bottom: -1px;
+  height: 3px;
+  border-radius: 2px 2px 0 0;
+  background: var(--tab-color, var(--border-strong));
+  opacity: 0;
+  transition: opacity 160ms ease;
+}
+.ledger-tab[data-active="true"]::after { opacity: 1; }
+
+/* Fita fina na margem esquerda de tarefas/listas, cor da área */
+.ledger-ribbon {
+  box-shadow: inset 3px 0 0 0 var(--ribbon-color, var(--border));
+}
+
+/* Transição suave ao trocar de vista */
+.view-enter {
+  animation: view-fade 180ms ease both;
+}
+@keyframes view-fade {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Toast (undo) */
+.toast-enter { animation: toast-in 200ms ease both; }
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(8px) scale(0.98); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* Checkbox de tarefa: pequeno "risco" ao concluir */
+.task-title[data-done="true"] {
+  text-decoration: line-through;
+  text-decoration-color: var(--text-faint);
+}
+
+/* Linha a arrastar (reordenação nativa) */
+[draggable="true"].dragging { opacity: 0.4; }
+.drop-target { box-shadow: inset 0 2px 0 0 var(--area-best); }
+
+/* Placeholder de captura rápida "respira" ligeiramente */
+.quick-capture-input::placeholder { color: var(--text-faint); }
+
+/* Utilitário: linha só truncada a uma linha */
+.truncate-1 {
+  overflow: hidden; text-overflow: ellipsis;
+  display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical;
+}
