@@ -1,4 +1,4 @@
-import { html, useState, useRef } from '../../lib/preact.js';
+import { html, useState } from '../../lib/preact.js';
 import { useLiveQuery } from '../../state/useLiveQuery.js';
 import { getAreas } from '../../api/areas.js';
 import {
@@ -11,7 +11,6 @@ import { Icon } from '../common/icons.js';
 import { ConfirmDialog } from '../common/ConfirmDialog.js';
 
 function AccountRow({ account, areas }) {
-  const fileRef = useRef(null);
   const [confirmingRemove, setConfirmingRemove] = useState(false);
   const [updating, setUpdating] = useState(false);
 
@@ -64,10 +63,10 @@ function AccountRow({ account, areas }) {
         <span class="text-[11px] font-mono text-ink-faint">
           ${account.lastSyncAt ? `importado às ${new Date(account.lastSyncAt).toLocaleTimeString('pt-PT', { hour: '2-digit', minute: '2-digit' })}` : 'sem data'}
         </span>
-        <button onClick=${() => fileRef.current?.click()} disabled=${updating} class="flex items-center gap-1.5 text-xs font-medium text-best hover:opacity-80 disabled:opacity-50">
+        <label class="flex items-center gap-1.5 text-xs font-medium text-best hover:opacity-80 cursor-pointer ${updating ? 'opacity-50 pointer-events-none' : ''}">
           <${Icon} name="refresh" size=${13} /> ${updating ? 'A atualizar…' : 'Atualizar ficheiro'}
-        </button>
-        <input ref=${fileRef} type="file" accept=".ics,text/calendar" class="hidden" onChange=${handleReimport} />
+          <input type="file" accept=".ics,text/calendar" class="hidden" onChange=${handleReimport} />
+        </label>
       </div>
 
       ${confirmingRemove && html`
@@ -86,7 +85,6 @@ function AccountRow({ account, areas }) {
 export function AppleCalendarAccounts() {
   const [areas] = useLiveQuery(() => getAreas(), [], []);
   const [accounts] = useLiveQuery(() => getAppleAccounts(), [], []);
-  const fileRef = useRef(null);
   const [importing, setImporting] = useState(false);
 
   async function handleImport(e) {
@@ -107,17 +105,13 @@ export function AppleCalendarAccounts() {
     <div class="space-y-3">
       ${(accounts || []).map((acc) => html`<${AccountRow} key=${acc.id} account=${acc} areas=${areas || []} />`)}
 
-      <button
-        onClick=${() => fileRef.current?.click()} disabled=${importing}
-        class="w-full flex items-center justify-center gap-2 border border-dashed border-border-strong rounded-xl py-3 text-sm font-medium text-ink-muted hover:text-ink hover:border-best transition-colors disabled:opacity-50"
-      >
+      <label class="w-full flex items-center justify-center gap-2 border border-dashed border-border-strong rounded-xl py-3 text-sm font-medium text-ink-muted hover:text-ink hover:border-best transition-colors cursor-pointer ${importing ? 'opacity-50 pointer-events-none' : ''}">
         <${Icon} name="plus" size=${16} /> ${importing ? 'A importar…' : 'Importar calendário (.ics)'}
-      </button>
-      <input ref=${fileRef} type="file" accept=".ics,text/calendar" class="hidden" onChange=${handleImport} />
+        <input type="file" accept=".ics,text/calendar" class="hidden" onChange=${handleImport} />
+      </label>
 
       <div class="text-[11px] text-ink-faint leading-relaxed space-y-1">
-        <p>No Mac: abre o <strong>Calendário</strong> → seleciona um calendário → Ficheiro → Exportar → Exportar…</p>
-        <p>No iPhone/iPad: usa a app <strong>Shortcuts</strong> ou partilha o calendário como .ics.</p>
+        <p>No Mac: abre o <strong>Calendário</strong> → clica com o botão direito num calendário → Exportar…</p>
         <p>Os eventos ficam guardados localmente. Para atualizar, reimporta o ficheiro.</p>
       </div>
     </div>
