@@ -3,7 +3,7 @@ import { useLiveQuery } from '../../state/useLiveQuery.js';
 import { getUpcomingTasks } from '../../api/tasks.js';
 import { getAreas } from '../../api/areas.js';
 import { getAllTags } from '../../api/tags.js';
-import { getCachedEvents } from '../../google/calendarClient.js';
+import { getCachedEvents } from '../../api/events.js';
 import { addDays, startOfDay, formatDayLabel } from '../../lib/date.js';
 import { QuickCapture } from '../capture/QuickCapture.js';
 import { TaskItem } from '../tasks/TaskItem.js';

@@ -11,6 +11,7 @@ import { updateSettings } from '../../api/settings.js';
 const NAV_ITEMS = [
   { id: 'today', label: 'Hoje', icon: 'sun' },
   { id: 'upcoming', label: 'Próximas', icon: 'calendar' },
+  { id: 'calendar', label: 'Calendário', icon: 'grid' },
   { id: 'all', label: 'Todas', icon: 'inbox' },
   { id: 'completed', label: 'Concluídas', icon: 'check' },
   { id: 'search', label: 'Pesquisar', icon: 'search' },

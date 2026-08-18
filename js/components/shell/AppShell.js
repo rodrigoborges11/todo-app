@@ -10,6 +10,7 @@ import { AllView } from '../views/AllView.js';
 import { CompletedView } from '../views/CompletedView.js';
 import { SearchView } from '../views/SearchView.js';
 import { SettingsView } from '../views/SettingsView.js';
+import { CalendarView } from '../views/CalendarView.js';
 
 export function AppShell() {
   const { currentView, currentListId, areaFilter } = useStore(uiStore);
@@ -17,6 +18,7 @@ export function AppShell() {
   let content;
   switch (currentView) {
     case 'upcoming': content = html`<${UpcomingView} areaFilter=${areaFilter} />`; break;
+    case 'calendar': content = html`<${CalendarView} areaFilter=${areaFilter} />`; break;
     case 'list': content = currentListId ? html`<${ListView} listId=${currentListId} />` : null; break;
     case 'all': content = html`<${AllView} areaFilter=${areaFilter} />`; break;
     case 'completed': content = html`<${CompletedView} areaFilter=${areaFilter} />`; break;

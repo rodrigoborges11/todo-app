@@ -30,6 +30,7 @@ const PATHS = {
   inbox: html`<polyline points="3.5,12 8,12 9.5,15 14.5,15 16,12 20.5,12"/><path d="M5.5 5.5h13l2 6.5v6.5a1 1 0 0 1-1 1h-15a1 1 0 0 1-1-1v-6.5z"/>`,
   dots: html`<circle cx="12" cy="5" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.3" fill="currentColor" stroke="none"/><circle cx="12" cy="19" r="1.3" fill="currentColor" stroke="none"/>`,
   grip: html`<circle cx="9" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="6" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="12" r="1.1" fill="currentColor" stroke="none"/><circle cx="9" cy="18" r="1.1" fill="currentColor" stroke="none"/><circle cx="15" cy="18" r="1.1" fill="currentColor" stroke="none"/>`,
+  grid: html`<rect x="3" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="3" width="7.5" height="7.5" rx="1.2"/><rect x="3" y="13.5" width="7.5" height="7.5" rx="1.2"/><rect x="13.5" y="13.5" width="7.5" height="7.5" rx="1.2"/>`,
   clock: html`<circle cx="12" cy="12" r="8.5"/><polyline points="12,7 12,12 16,14"/>`,
   mapPin: html`<path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.2"/>`,
 };

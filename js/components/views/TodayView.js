@@ -2,7 +2,7 @@ import { html, useState } from '../../lib/preact.js';
 import { useLiveQuery } from '../../state/useLiveQuery.js';
 import { getTodayTasks, removeExampleTasks } from '../../api/tasks.js';
 import { getAreas } from '../../api/areas.js';
-import { getCachedEvents } from '../../google/calendarClient.js';
+import { getCachedEvents } from '../../api/events.js';
 import { startOfDay, endOfDay, formatFullDate } from '../../lib/date.js';
 import { QuickCapture } from '../capture/QuickCapture.js';
 import { TaskListSection } from '../tasks/TaskListSection.js';

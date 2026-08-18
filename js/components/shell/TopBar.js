@@ -2,7 +2,7 @@ import { html } from '../../lib/preact.js';
 import { uiStore, useStore } from '../../state/store.js';
 import { Icon } from '../common/icons.js';
 
-const TITLES = { today: 'Hoje', upcoming: 'Próximas', all: 'Todas', completed: 'Concluídas', search: 'Pesquisar', settings: 'Definições', list: 'Lista' };
+const TITLES = { today: 'Hoje', upcoming: 'Próximas', calendar: 'Calendário', all: 'Todas', completed: 'Concluídas', search: 'Pesquisar', settings: 'Definições', list: 'Lista' };
 
 export function TopBar() {
   const { currentView } = useStore(uiStore);

@@ -16,7 +16,6 @@ db.version(1).stores({
   tags: 'id, areaId, name',
   taskTags: '++autoId, taskId, tagId, &[taskId+tagId]',
 
-  // Camada Google (Fase 2) — apenas leitura, ver js/google/calendarClient.js
   accounts: 'id, areaId, email, status',
   tokens: 'accountId',
   calendars: 'id, accountId, isVisible',
