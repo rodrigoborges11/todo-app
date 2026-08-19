@@ -3,7 +3,7 @@
 // As chamadas à API Google NUNCA são servidas por este cache (RNF-42) —
 // deixamos essas pedidos passar diretamente para a rede.
 
-const CACHE_NAME = 'todo-cenas-v1';
+const CACHE_NAME = 'todo-cenas-v2';
 const APP_SHELL = [
   './',
   './index.html',
