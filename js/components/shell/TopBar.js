@@ -11,7 +11,7 @@ export function TopBar() {
       <button onClick=${() => uiStore.set({ sidebarOpen: true })} aria-label="Abrir menu" class="text-ink-muted">
         <${Icon} name="menu" size=${20} />
       </button>
-      <h1 class="font-semibold text-[15px]">${TITLES[currentView] || 'Ledger'}</h1>
+      <h1 class="font-semibold text-[15px]">${TITLES[currentView] || 'todo-cenas'}</h1>
     </div>
   `;
 }

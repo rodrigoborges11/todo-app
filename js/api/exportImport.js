@@ -10,7 +10,7 @@ export async function buildExportPayload() {
   }
   const settings = await db.settings.get('app');
   return {
-    app: 'todo-app',
+    app: 'todo-cenas',
     schema_version: SCHEMA_VERSION,
     exported_at: new Date().toISOString(),
     settings: settings ? {
@@ -45,7 +45,7 @@ export function validateImportPayload(raw) {
   } catch {
     return { valid: false, error: 'O ficheiro não é um JSON válido.' };
   }
-  if (json.app !== 'todo-app') {
+  if (json.app !== 'todo-cenas' && json.app !== 'todo-app') {
     return { valid: false, error: 'Este ficheiro não foi exportado por esta aplicação.' };
   }
   if (typeof json.schema_version !== 'number') {

@@ -1,6 +1,6 @@
 {
-  "name": "Ledger — Tarefas Pessoal & BEST",
-  "short_name": "Ledger",
+  "name": "todo-cenas",
+  "short_name": "todo-cenas",
   "description": "To-do list local-first com calendário Google em leitura, separando tarefas Pessoais das do BEST.",
   "start_url": "./index.html",
   "scope": "./",

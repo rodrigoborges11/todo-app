@@ -55,7 +55,7 @@ export function Sidebar() {
           <div class="w-6 h-6 rounded-md bg-best/15 flex items-center justify-center">
             <div class="w-2 h-2 rounded-sm bg-best"></div>
           </div>
-          <span class="font-semibold text-[14px] tracking-tight">Ledger</span>
+          <span class="font-semibold text-[14px] tracking-tight">todo-cenas</span>
         </div>
         <button onClick=${() => uiStore.set({ sidebarOpen: false })} class="lg:hidden text-ink-muted" aria-label="Fechar menu">
           <${Icon} name="x" size=${20} />
