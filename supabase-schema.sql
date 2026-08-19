@@ -63,10 +63,57 @@ create table if not exists settings (
   created_at              bigint
 );
 
+-- Calendários (Apple .ics e futuras integrações)
+create table if not exists accounts (
+  id           text primary key,
+  type         text not null,
+  email        text,
+  display_name text,
+  area_id      text references areas(id) on delete set null,
+  status       text,
+  last_sync_at bigint,
+  sync_token   text
+);
+
+create table if not exists tokens (
+  account_id   text primary key references accounts(id) on delete cascade,
+  access_token text,
+  refresh_token text,
+  expires_at   bigint
+);
+
+create table if not exists calendars (
+  id         text primary key,
+  account_id text not null references accounts(id) on delete cascade,
+  name       text,
+  color      text,
+  is_visible boolean not null default true
+);
+
+create table if not exists events (
+  id           text primary key,
+  calendar_id  text not null references calendars(id) on delete cascade,
+  account_id   text not null references accounts(id) on delete cascade,
+  title        text,
+  starts_at    bigint,
+  ends_at      bigint,
+  is_all_day   boolean not null default false,
+  location     text,
+  updated_at   bigint,
+  is_cancelled boolean not null default false
+);
+
+create index if not exists events_starts_at_idx on events(starts_at);
+create index if not exists events_account_starts_idx on events(account_id, starts_at);
+
 -- App single-user: RLS desativado (não há auth)
-alter table areas     disable row level security;
-alter table lists     disable row level security;
-alter table tags      disable row level security;
-alter table tasks     disable row level security;
-alter table task_tags disable row level security;
-alter table settings  disable row level security;
+alter table areas      disable row level security;
+alter table lists      disable row level security;
+alter table tags       disable row level security;
+alter table tasks      disable row level security;
+alter table task_tags  disable row level security;
+alter table settings   disable row level security;
+alter table accounts   disable row level security;
+alter table tokens     disable row level security;
+alter table calendars  disable row level security;
+alter table events     disable row level security;

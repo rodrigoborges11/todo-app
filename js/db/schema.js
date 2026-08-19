@@ -1,20 +1,10 @@
-import { Dexie } from '../lib/dexie.js';
 import { uid } from '../lib/id.js';
 import { supabase } from './supabase.js';
 import { jsToRow } from './mapper.js';
 
 export const SCHEMA_VERSION = 1;
 export const AREA_SLUG = { PESSOAL: 'pessoal', BEST: 'best' };
-export const NON_EXPORTABLE_TABLES = new Set(['tokens', 'calendars', 'events']);
-
-// Dexie permanece apenas para cache de calendário (dados locais/sensíveis)
-export const db = new Dexie('todo-cenas-cal');
-db.version(1).stores({
-  accounts: 'id, areaId, email, status',
-  tokens: 'accountId',
-  calendars: 'id, accountId, isVisible',
-  events: 'id, calendarId, accountId, startsAt, [accountId+startsAt]',
-});
+export const NON_EXPORTABLE_TABLES = new Set(['tokens', 'calendars', 'events', 'accounts']);
 
 async function seedIfEmpty() {
   const { data } = await supabase.from('settings').select('id').eq('id', 'app').maybeSingle();
@@ -61,6 +51,6 @@ async function seedIfEmpty() {
 
 let readyPromise = null;
 export function dbReady() {
-  if (!readyPromise) readyPromise = db.open().then(seedIfEmpty);
+  if (!readyPromise) readyPromise = seedIfEmpty();
   return readyPromise;
 }

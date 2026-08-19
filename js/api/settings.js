@@ -47,6 +47,10 @@ export async function checkStorageAvailable() {
 }
 
 export async function wipeAllData() {
+  await supabase.from('events').delete().neq('id', '');
+  await supabase.from('calendars').delete().neq('id', '');
+  await supabase.from('tokens').delete().neq('account_id', '');
+  await supabase.from('accounts').delete().neq('id', '');
   await supabase.from('tasks').delete().neq('id', '');
   await supabase.from('lists').delete().neq('id', '');
   await supabase.from('tags').delete().neq('id', '');

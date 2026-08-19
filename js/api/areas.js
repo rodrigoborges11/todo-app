@@ -1,5 +1,4 @@
 import { supabase } from '../db/supabase.js';
-import { db } from '../db/schema.js';
 import { uid } from '../lib/id.js';
 import { rowToJs, jsToRow, check } from '../db/mapper.js';
 import { invalidate } from '../db/invalidator.js';
@@ -48,8 +47,7 @@ export async function deleteArea(id) {
   if (area?.is_default) throw new Error('As áreas Pessoal e BEST não podem ser eliminadas.');
   const { count } = await supabase.from('tasks').select('id', { count: 'exact', head: true }).eq('area_id', id);
   if (count > 0) throw new Error('Move ou elimina primeiro as tarefas desta área.');
-  // ON DELETE CASCADE apaga listas e tags; eliminamos accounts locais manualmente
-  await db.accounts.where('areaId').equals(id).delete();
+  // ON DELETE SET NULL em accounts.area_id; CASCADE apaga listas e tags
   check(await supabase.from('areas').delete().eq('id', id));
   invalidate();
 }

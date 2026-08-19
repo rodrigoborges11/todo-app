@@ -1,15 +1,19 @@
-import { db } from '../db/schema.js';
+import { supabase } from '../db/supabase.js';
+import { rowToJs, check } from '../db/mapper.js';
 
 export async function getCachedEvents({ fromTs, toTs, areaId = null }) {
-  const events = await db.events.where('startsAt').between(fromTs, toTs, true, true).toArray();
-  if (!events.length) return [];
-  const accounts = await db.accounts.toArray();
-  const accountById = Object.fromEntries(accounts.map((a) => [a.id, a]));
-  const calendars = await db.calendars.toArray();
-  const calendarById = Object.fromEntries(calendars.map((c) => [c.id, c]));
+  let q = supabase.from('events').select('*, calendars(id, name, color, account_id), accounts(id, area_id, display_name)')
+    .gte('starts_at', fromTs).lte('starts_at', toTs);
+  const rows = check(await q);
 
-  return events
-    .map((e) => ({ ...e, account: accountById[e.accountId], calendar: calendarById[e.calendarId] }))
-    .filter((e) => e.account && (!areaId || areaId === 'all' || e.account.areaId === areaId))
+  return rows
+    .map(row => {
+      const { calendars: cal, accounts: acc, ...ev } = row;
+      const mapped = rowToJs(ev);
+      mapped.calendar = cal ? rowToJs(cal) : null;
+      mapped.account = acc ? rowToJs(acc) : null;
+      return mapped;
+    })
+    .filter(e => e.account && (!areaId || areaId === 'all' || e.account.areaId === areaId))
     .sort((a, b) => a.startsAt - b.startsAt);
 }
