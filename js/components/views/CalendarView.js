@@ -1,7 +1,7 @@
 import { html, useState } from '../../lib/preact.js';
 import { useLiveQuery } from '../../state/useLiveQuery.js';
 import { getAllTasks } from '../../api/tasks.js';
-import { getAreas } from '../../api/areas.js';
+import { getAreas, areaColorVar } from '../../api/areas.js';
 import { getAllTags } from '../../api/tags.js';
 import { getCachedEvents } from '../../api/events.js';
 import { startOfDay, formatFullDate } from '../../lib/date.js';
@@ -169,12 +169,14 @@ export function CalendarView({ areaFilter }) {
                 </span>
                 ${total > 0 && html`
                   <div class="flex flex-wrap gap-[3px]">
-                    ${evDots.map((_, j) => html`
-                      <span key=${'ev-' + j} class="block w-1.5 h-1.5 rounded-full" style="background:#56c4f1" />
-                    `)}
-                    ${tkDots.map((_, j) => html`
-                      <span key=${'tk-' + j} class="block w-1.5 h-1.5 rounded-full" style="background:#cf0f68" />
-                    `)}
+                    ${evDots.map((ev, j) => {
+                      const area = areasById[ev.account?.areaId];
+                      return html`<span key=${'ev-' + j} class="block w-1.5 h-1.5 rounded-full" style="background:${area ? areaColorVar(area) : '#8B92A6'}" />`;
+                    })}
+                    ${tkDots.map((t, j) => {
+                      const area = areasById[t.areaId];
+                      return html`<span key=${'tk-' + j} class="block w-1.5 h-1.5 rounded-full" style="background:${area ? areaColorVar(area) : '#8B92A6'}" />`;
+                    })}
                     ${extra > 0 && html`
                       <span class="text-[9px] font-mono text-ink-faint leading-tight">+${extra}</span>
                     `}
