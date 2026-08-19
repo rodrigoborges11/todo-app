@@ -1,61 +1,63 @@
-import { db } from '../db/schema.js';
+import { supabase } from '../db/supabase.js';
 import { uid } from '../lib/id.js';
+import { rowToJs, jsToRow, check } from '../db/mapper.js';
+import { invalidate } from '../db/invalidator.js';
 
 export async function getLists(areaId = null) {
-  const all = await db.lists.orderBy('position').toArray();
-  return areaId ? all.filter((l) => l.areaId === areaId) : all;
+  let q = supabase.from('lists').select('*').order('position');
+  if (areaId) q = q.eq('area_id', areaId);
+  return check(await q).map(rowToJs);
 }
 
 export async function getListById(id) {
-  return db.lists.get(id);
+  const data = check(await supabase.from('lists').select('*').eq('id', id).maybeSingle());
+  return data ? rowToJs(data) : null;
 }
 
 export async function createList(areaId, name) {
-  const siblings = await db.lists.where('areaId').equals(areaId).toArray();
+  const { data: siblings } = await supabase.from('lists').select('id').eq('area_id', areaId);
   const list = {
     id: uid(), areaId, name: name.trim(), color: null,
-    position: siblings.length, isDefault: false,
+    position: siblings?.length || 0, isDefault: false,
   };
-  await db.lists.add(list);
+  check(await supabase.from('lists').insert(jsToRow(list)));
+  invalidate();
   return list;
 }
 
 export async function renameList(id, name) {
-  await db.lists.update(id, { name: name.trim() });
+  check(await supabase.from('lists').update({ name: name.trim() }).eq('id', id));
+  invalidate();
 }
 
 export async function reorderLists(areaId, orderedIds) {
-  await db.transaction('rw', db.lists, async () => {
-    await Promise.all(orderedIds.map((id, index) => db.lists.update(id, { position: index })));
-  });
+  await Promise.all(orderedIds.map((id, index) =>
+    supabase.from('lists').update({ position: index }).eq('id', id)
+  ));
+  invalidate();
 }
 
-/**
- * Elimina uma lista. `strategy` é 'move' (move tarefas para a caixa de entrada
- * da área) ou 'delete' (apaga as tarefas também) — RF-34.
- */
 export async function deleteList(id, strategy) {
-  const list = await db.lists.get(id);
+  const list = rowToJs(check(await supabase.from('lists').select('*').eq('id', id).single()));
   if (list.isDefault) throw new Error('A Caixa de entrada não pode ser eliminada.');
 
-  const tasks = await db.tasks.where('listId').equals(id).toArray();
-
-  await db.transaction('rw', db.lists, db.tasks, db.taskTags, async () => {
-    if (strategy === 'delete') {
-      for (const t of tasks) {
-        await db.taskTags.where('taskId').equals(t.id).delete();
-      }
-      await db.tasks.where('listId').equals(id).delete();
-    } else {
-      const inbox = await db.lists.where({ areaId: list.areaId, isDefault: true }).first();
-      if (inbox) {
-        await Promise.all(tasks.map((t) => db.tasks.update(t.id, { listId: inbox.id })));
-      }
+  if (strategy === 'delete') {
+    // ON DELETE CASCADE em task_tags trata das associações; basta apagar as tasks
+    check(await supabase.from('tasks').delete().eq('list_id', id));
+  } else {
+    const { data: inbox } = await supabase.from('lists')
+      .select('id').eq('area_id', list.areaId).eq('is_default', true).maybeSingle();
+    if (inbox) {
+      check(await supabase.from('tasks').update({ list_id: inbox.id }).eq('list_id', id));
     }
-    await db.lists.delete(id);
-  });
+  }
+  check(await supabase.from('lists').delete().eq('id', id));
+  invalidate();
 }
 
 export async function countTasksInList(id) {
-  return db.tasks.where('listId').equals(id).and((t) => !t.isCompleted).count();
+  const { count } = await supabase.from('tasks')
+    .select('id', { count: 'exact', head: true })
+    .eq('list_id', id).eq('is_completed', false);
+  return count || 0;
 }
