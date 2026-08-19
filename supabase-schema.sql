@@ -117,3 +117,8 @@ alter table accounts   disable row level security;
 alter table tokens     disable row level security;
 alter table calendars  disable row level security;
 alter table events     disable row level security;
+
+-- Migração: eventos manuais (sem conta/calendário importado)
+alter table events alter column account_id drop not null;
+alter table events alter column calendar_id drop not null;
+alter table events add column if not exists area_id text references areas(id) on delete set null;

@@ -1,12 +1,20 @@
 import { html } from '../../lib/preact.js';
 import { formatTime } from '../../lib/date.js';
 import { areaColorVar } from '../../api/areas.js';
+import { deleteEvent } from '../../api/events.js';
 import { Icon } from '../common/icons.js';
 
 export function EventRow({ event, area }) {
+  const isManual = !event.account && !event.calendar;
+
+  async function handleDelete() {
+    if (!confirm(`Apagar "${event.title}"?`)) return;
+    await deleteEvent(event.id);
+  }
+
   return html`
     <div
-      class="flex items-start gap-3 px-3 py-2 rounded-lg"
+      class="flex items-start gap-3 px-3 py-2 rounded-lg group"
       style=${area ? `box-shadow: inset 3px 0 0 0 ${areaColorVar(area)}` : ''}
     >
       <div class="mt-0.5 text-ink-faint shrink-0"><${Icon} name="calendar" size=${15} /></div>
@@ -19,7 +27,12 @@ export function EventRow({ event, area }) {
           ${event.location && html`<span class="text-[11px] text-ink-faint truncate-1">· ${event.location}</span>`}
         </div>
       </div>
-      <span class="text-[10px] font-mono text-ink-faint shrink-0 mt-1">${event.account?.email?.split('@')[0]}</span>
+      ${isManual
+        ? html`<button onClick=${handleDelete} class="opacity-0 group-hover:opacity-100 text-ink-faint hover:text-danger shrink-0 mt-0.5 transition-opacity" aria-label="Apagar evento">
+            <${Icon} name="trash" size=${14} />
+          </button>`
+        : html`<span class="text-[10px] font-mono text-ink-faint shrink-0 mt-1">${event.account?.displayName?.split('@')[0] || ''}</span>`
+      }
     </div>
   `;
 }

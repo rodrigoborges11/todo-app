@@ -8,6 +8,7 @@ import { startOfDay, formatFullDate } from '../../lib/date.js';
 import { TaskItem } from '../tasks/TaskItem.js';
 import { TaskEditor } from '../tasks/TaskEditor.js';
 import { EventRow } from '../calendar/EventRow.js';
+import { EventEditor } from '../calendar/EventEditor.js';
 import { Icon } from '../common/icons.js';
 
 const MONTH_NAMES = [
@@ -57,6 +58,7 @@ export function CalendarView({ areaFilter }) {
   const [month, setMonth] = useState(today.getMonth());
   const [selectedDay, setSelectedDay] = useState(() => startOfDay(Date.now()));
   const [openTask, setOpenTask] = useState(null);
+  const [newEvent, setNewEvent] = useState(false);
 
   const { start: monthStart, end: monthEnd } = monthBounds(year, month);
 
@@ -170,7 +172,7 @@ export function CalendarView({ areaFilter }) {
                 ${total > 0 && html`
                   <div class="flex flex-wrap gap-[3px]">
                     ${evDots.map((ev, j) => {
-                      const area = areasById[ev.account?.areaId];
+                      const area = areasById[ev.account?.areaId ?? ev.areaId];
                       return html`<span key=${'ev-' + j} class="block w-1.5 h-1.5 rounded-full" style="background:${area ? areaColorVar(area) : '#8B92A6'}" />`;
                     })}
                     ${tkDots.map((t, j) => {
@@ -190,9 +192,15 @@ export function CalendarView({ areaFilter }) {
 
       ${selectedDay && html`
         <div class="flex flex-col gap-2">
-          <p class="px-1 text-[11px] font-mono uppercase tracking-widest text-ink-faint">
-            ${formatFullDate(selectedDay)}${selectedDay === todayTs ? ' · hoje' : ''}
-          </p>
+          <div class="flex items-center justify-between px-1">
+            <p class="text-[11px] font-mono uppercase tracking-widest text-ink-faint">
+              ${formatFullDate(selectedDay)}${selectedDay === todayTs ? ' · hoje' : ''}
+            </p>
+            <button onClick=${() => setNewEvent(true)}
+              class="flex items-center gap-1 text-[11px] font-medium text-ink-muted hover:text-ink">
+              <${Icon} name="plus" size=${13} /> Novo evento
+            </button>
+          </div>
           ${!hasItems && html`
             <p class="text-sm text-ink-faint text-center py-6 rounded-xl border border-dashed border-border">
               Nada agendado para este dia.
@@ -201,7 +209,7 @@ export function CalendarView({ areaFilter }) {
           ${hasItems && html`
             <div class="flex flex-col bg-surface-1/40 rounded-xl border border-border py-1">
               ${selEvents.map((ev) => html`
-                <${EventRow} key=${ev.id} event=${ev} area=${areasById[ev.account?.areaId]} />
+                <${EventRow} key=${ev.id} event=${ev} area=${areasById[ev.account?.areaId ?? ev.areaId]} />
               `)}
               ${selTasks.map((t) => html`
                 <${TaskItem}
@@ -218,5 +226,6 @@ export function CalendarView({ areaFilter }) {
       `}
     </div>
     ${openTask && html`<${TaskEditor} task=${openTask} onClose=${() => setOpenTask(null)} />`}
+    ${newEvent && html`<${EventEditor} dayTs=${selectedDay} areas=${areas || []} onClose=${() => setNewEvent(false)} />`}
   `;
 }
