@@ -4,7 +4,7 @@ import { areaColorVar } from '../../api/areas.js';
 import { deleteEvent } from '../../api/events.js';
 import { Icon } from '../common/icons.js';
 
-export function EventRow({ event, area }) {
+export function EventRow({ event, area, onEdit }) {
   const isManual = !event.account && !event.calendar;
 
   async function handleDelete() {
@@ -28,9 +28,14 @@ export function EventRow({ event, area }) {
         </div>
       </div>
       ${isManual
-        ? html`<button onClick=${handleDelete} class="opacity-0 group-hover:opacity-100 text-ink-faint hover:text-danger shrink-0 mt-0.5 transition-opacity" aria-label="Apagar evento">
-            <${Icon} name="trash" size=${14} />
-          </button>`
+        ? html`<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-0.5">
+            <button onClick=${() => onEdit?.(event)} class="text-ink-faint hover:text-ink" aria-label="Editar evento">
+              <${Icon} name="pencil" size=${14} />
+            </button>
+            <button onClick=${handleDelete} class="text-ink-faint hover:text-danger" aria-label="Apagar evento">
+              <${Icon} name="trash" size=${14} />
+            </button>
+          </div>`
         : html`<span class="text-[10px] font-mono text-ink-faint shrink-0 mt-1">${event.account?.displayName?.split('@')[0] || ''}</span>`
       }
     </div>

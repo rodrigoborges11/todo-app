@@ -44,6 +44,19 @@ export async function createManualEvent({ title, startsAt, endsAt, isAllDay = fa
   invalidate();
 }
 
+export async function updateManualEvent(id, { title, startsAt, endsAt, isAllDay, areaId, location }) {
+  check(await supabase.from('events').update({
+    title: title.trim(),
+    starts_at: startsAt,
+    ends_at: endsAt,
+    is_all_day: isAllDay,
+    area_id: areaId || null,
+    location: location?.trim() || null,
+    updated_at: Date.now(),
+  }).eq('id', id));
+  invalidate();
+}
+
 export async function deleteEvent(id) {
   check(await supabase.from('events').delete().eq('id', id));
   invalidate();

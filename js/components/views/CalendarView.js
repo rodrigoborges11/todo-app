@@ -59,6 +59,7 @@ export function CalendarView({ areaFilter }) {
   const [selectedDay, setSelectedDay] = useState(() => startOfDay(Date.now()));
   const [openTask, setOpenTask] = useState(null);
   const [newEvent, setNewEvent] = useState(false);
+  const [editEvent, setEditEvent] = useState(null);
 
   const { start: monthStart, end: monthEnd } = monthBounds(year, month);
 
@@ -209,7 +210,7 @@ export function CalendarView({ areaFilter }) {
           ${hasItems && html`
             <div class="flex flex-col bg-surface-1/40 rounded-xl border border-border py-1">
               ${selEvents.map((ev) => html`
-                <${EventRow} key=${ev.id} event=${ev} area=${areasById[ev.account?.areaId ?? ev.areaId]} />
+                <${EventRow} key=${ev.id} event=${ev} area=${areasById[ev.account?.areaId ?? ev.areaId]} onEdit=${setEditEvent} />
               `)}
               ${selTasks.map((t) => html`
                 <${TaskItem}
@@ -227,5 +228,6 @@ export function CalendarView({ areaFilter }) {
     </div>
     ${openTask && html`<${TaskEditor} task=${openTask} onClose=${() => setOpenTask(null)} />`}
     ${newEvent && html`<${EventEditor} dayTs=${selectedDay} areas=${areas || []} onClose=${() => setNewEvent(false)} />`}
+    ${editEvent && html`<${EventEditor} event=${editEvent} areas=${areas || []} onClose=${() => setEditEvent(null)} />`}
   `;
 }

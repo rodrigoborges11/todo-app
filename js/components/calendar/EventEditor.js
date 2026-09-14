@@ -1,5 +1,5 @@
 import { html, useState } from '../../lib/preact.js';
-import { createManualEvent } from '../../api/events.js';
+import { createManualEvent, updateManualEvent } from '../../api/events.js';
 import { areaColorVar } from '../../api/areas.js';
 import { Icon } from '../common/icons.js';
 
@@ -15,22 +15,29 @@ function applyTime(dayTs, timeStr) {
   return d.getTime();
 }
 
-export function EventEditor({ dayTs, areas, onClose }) {
-  const [title, setTitle]       = useState('');
-  const [areaId, setAreaId]     = useState(areas?.[0]?.id || null);
-  const [isAllDay, setIsAllDay] = useState(false);
-  const [startTime, setStart]   = useState('09:00');
-  const [endTime, setEnd]       = useState('10:00');
-  const [location, setLocation] = useState('');
+export function EventEditor({ dayTs, areas, event, onClose }) {
+  const editing = !!event;
+  const baseDayTs = editing ? event.startsAt : dayTs;
+
+  const [title, setTitle]       = useState(editing ? event.title : '');
+  const [areaId, setAreaId]     = useState(editing ? (event.areaId || null) : (areas?.[0]?.id || null));
+  const [isAllDay, setIsAllDay] = useState(editing ? event.isAllDay : false);
+  const [startTime, setStart]   = useState(editing && !event.isAllDay ? toTimeStr(event.startsAt) : '09:00');
+  const [endTime, setEnd]       = useState(editing && !event.isAllDay ? toTimeStr(event.endsAt) : '10:00');
+  const [location, setLocation] = useState(editing ? (event.location || '') : '');
   const [saving, setSaving]     = useState(false);
 
   async function save(e) {
     e.preventDefault();
     if (!title.trim()) return;
     setSaving(true);
-    const startsAt = isAllDay ? dayTs : applyTime(dayTs, startTime);
-    const endsAt   = isAllDay ? dayTs + 86399999 : applyTime(dayTs, endTime);
-    await createManualEvent({ title, startsAt, endsAt, isAllDay, areaId, location });
+    const startsAt = isAllDay ? baseDayTs : applyTime(baseDayTs, startTime);
+    const endsAt   = isAllDay ? baseDayTs + 86399999 : applyTime(baseDayTs, endTime);
+    if (editing) {
+      await updateManualEvent(event.id, { title, startsAt, endsAt, isAllDay, areaId, location });
+    } else {
+      await createManualEvent({ title, startsAt, endsAt, isAllDay, areaId, location });
+    }
     onClose();
   }
 
@@ -38,7 +45,7 @@ export function EventEditor({ dayTs, areas, onClose }) {
     <div class="fixed inset-0 z-50 flex items-end sm:items-center justify-center p-4 bg-black/40 backdrop-blur-sm" onClick=${e => e.target === e.currentTarget && onClose()}>
       <form onSubmit=${save} class="w-full max-w-md bg-surface-0 rounded-2xl shadow-xl flex flex-col gap-4 p-5">
         <div class="flex items-center justify-between">
-          <h2 class="font-semibold text-[15px]">Novo evento</h2>
+          <h2 class="font-semibold text-[15px]">${editing ? 'Editar evento' : 'Novo evento'}</h2>
           <button type="button" onClick=${onClose} class="text-ink-faint hover:text-ink">
             <${Icon} name="x" size=${18} />
           </button>
@@ -104,7 +111,7 @@ export function EventEditor({ dayTs, areas, onClose }) {
           </button>
           <button type="submit" disabled=${saving || !title.trim()}
             class="px-4 py-2 rounded-xl text-sm font-medium bg-best text-white disabled:opacity-40">
-            ${saving ? 'A guardar…' : 'Criar evento'}
+            ${saving ? 'A guardar…' : (editing ? 'Guardar alterações' : 'Criar evento')}
           </button>
         </div>
       </form>
