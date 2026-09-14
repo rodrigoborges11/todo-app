@@ -27,17 +27,15 @@ export function EventRow({ event, area, onEdit }) {
           ${event.location && html`<span class="text-[11px] text-ink-faint truncate-1">· ${event.location}</span>`}
         </div>
       </div>
-      ${isManual
-        ? html`<div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-0.5">
-            <button onClick=${() => onEdit?.(event)} class="text-ink-faint hover:text-ink" aria-label="Editar evento">
-              <${Icon} name="pencil" size=${14} />
-            </button>
-            <button onClick=${handleDelete} class="text-ink-faint hover:text-danger" aria-label="Apagar evento">
-              <${Icon} name="trash" size=${14} />
-            </button>
-          </div>`
-        : html`<span class="text-[10px] font-mono text-ink-faint shrink-0 mt-1">${event.account?.displayName?.split('@')[0] || ''}</span>`
-      }
+      <div class="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity shrink-0 mt-0.5">
+        ${!isManual && html`<span class="text-[10px] font-mono text-ink-faint mr-1">${event.account?.displayName?.split('@')[0] || ''}</span>`}
+        <button onClick=${() => onEdit?.(event)} class="text-ink-faint hover:text-ink" aria-label="Editar evento">
+          <${Icon} name="pencil" size=${14} />
+        </button>
+        ${isManual && html`<button onClick=${handleDelete} class="text-ink-faint hover:text-danger" aria-label="Apagar evento">
+          <${Icon} name="trash" size=${14} />
+        </button>`}
+      </div>
     </div>
   `;
 }
